@@ -10,7 +10,8 @@ using namespace sf;
 int main()
 {
     srand(time(NULL));
-
+    bool scored = false;
+    bool firstRun = true;
     RenderWindow window(sf::VideoMode(1000, 600), "Pong");
 
     Object player1 = Object(40, window.getSize().y / 2 - 64, 24, 128);
@@ -24,13 +25,29 @@ int main()
     ball.setDirection(rand() % 2 == 0 ? 1 : -1, rand() % 2 == 0 ? 1 : -1);
     ball.setPosition(window.getSize().x / 2 - 16, window.getSize().y / 2 - 16);
 
+    Font font;
+    if (!font.loadFromFile("pixel.ttf"))
+		std::cout << "Error loading font" << std::endl;
+
     Score player1Score = Score(window.getSize().x / 2 - 100, 0, 50, 50);
-    player1Score.setFillColor(Color::White);
+    player1Score.text.setFont(font);
+    player1Score.text.setFillColor(Color::White);
     player1Score.setScore(0);
+    player1Score.text.setCharacterSize(50);
+    player1Score.text.setString(std::to_string(player1Score.getScore()));
 
     Score player2Score = Score(window.getSize().x / 2 + 50, 0, 50, 50);
-    player2Score.setFillColor(Color::White);
+    player2Score.text.setFont(font);
+    player2Score.text.setFillColor(Color::White);
     player2Score.setScore(0);
+    player2Score.text.setCharacterSize(50);
+    player2Score.text.setString(std::to_string(player2Score.getScore()));
+
+    Text controls = Text("W/S to move player 1\nUp/Down to move player 2", font);
+    controls.setFillColor(Color::White);
+    // Set Position to center of screen
+    controls.setPosition(window.getSize().x / 2 - controls.getGlobalBounds().width / 2, window.getSize().y / 4 - controls.getGlobalBounds().height / 2);
+    controls.setFont(font);
 
     while (window.isOpen())
     {
@@ -93,16 +110,46 @@ int main()
 			ball.bounceX();
         }
 
+        // Add score if ball goes off screen
+        if (ball.getPosition()[0] < 0) {
+			player2Score.addScore(1);
+			ball.setPosition(window.getSize().x / 2 - 16, window.getSize().y / 2 - 16);
+			ball.setDirection(rand() % 2 == 0 ? 1 : -1, rand() % 2 == 0 ? 1 : -1);
+            scored = true;
+		}
+        if (ball.getPosition()[0] > window.getSize().x - 32) {
+            player1Score.addScore(1);
+            ball.setPosition(window.getSize().x / 2 - 16, window.getSize().y / 2 - 16);
+            ball.setDirection(rand() % 2 == 0 ? 1 : -1, rand() % 2 == 0 ? 1 : -1);
+            scored = true;
+        }
+
         window.clear();
         window.draw(player1.shape);
         window.draw(player2.shape);
         window.draw(ball.shape);
         window.draw(player1Score.text);
         window.draw(player2Score.text);
-        window.display();
 
         // Lock at 60 FPS
         sleep(milliseconds(1000 / 60));
+
+        if (scored) {
+            sleep(milliseconds(1000));
+            player1.setPosition(40, window.getSize().y / 2 - 64);
+            player2.setPosition(window.getSize().x - 40 - 24, window.getSize().y / 2 - 64);
+            scored = false;
+            window.display();
+        }
+
+        if (firstRun) {
+			window.draw(controls);
+            window.display();
+			sleep(milliseconds(3000));
+			firstRun = false;
+		}
+
+        window.display();
     }
 
     return 0;

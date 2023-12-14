@@ -60,7 +60,7 @@ int Score::getScore()
 void Score::addScore(int score)
 {
 	this->score += score;
-	setText(std::to_string(this->score));
+	text.setString(std::to_string(this->score));
 }
 
 void Score::setText(String text)
