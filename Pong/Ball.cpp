@@ -12,14 +12,19 @@ int* Ball::getDirection()
 	return direction;
 }
 
-void Ball::setSpeed(int speed)
+void Ball::setSpeed(float speed)
 {
 	this->speed = speed;
 }
 
-int Ball::getSpeed()
+float Ball::getSpeed()
 {
 	return speed;
+}
+
+void Ball::addSpeed(float speed) {
+	this->speed += speed;
+
 }
 
 void Ball::move()

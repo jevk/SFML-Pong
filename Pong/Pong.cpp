@@ -12,7 +12,7 @@ int main()
     srand(time(NULL));
     bool scored = false;
     bool firstRun = true;
-    RenderWindow window(sf::VideoMode(1000, 600), "Pong");
+    RenderWindow window(sf::VideoMode(1000, 750), "Pong");
 
     Object player1 = Object(40, window.getSize().y / 2 - 64, 24, 128);
     player1.setFillColor(Color::White);
@@ -104,10 +104,12 @@ int main()
         if (ball.shape.getGlobalBounds().intersects(player1.shape.getGlobalBounds())) {
             ball.setPosition(player1.getPosition()[0] + ball.getBounds()[0] + player1.getBounds()[0], ball.getPosition()[1]);
             ball.bounceX();
+            ball.addSpeed(0.1f);
         }
         if (ball.shape.getGlobalBounds().intersects(player2.shape.getGlobalBounds())) {
 			ball.setPosition(player2.getPosition()[0] - 32, ball.getPosition()[1]);
 			ball.bounceX();
+            ball.addSpeed(0.1f);
         }
 
         // Add score if ball goes off screen
@@ -116,12 +118,14 @@ int main()
 			ball.setPosition(window.getSize().x / 2 - 16, window.getSize().y / 2 - 16);
 			ball.setDirection(rand() % 2 == 0 ? 1 : -1, rand() % 2 == 0 ? 1 : -1);
             scored = true;
+            ball.setSpeed(5);
 		}
         if (ball.getPosition()[0] > window.getSize().x - 32) {
             player1Score.addScore(1);
             ball.setPosition(window.getSize().x / 2 - 16, window.getSize().y / 2 - 16);
             ball.setDirection(rand() % 2 == 0 ? 1 : -1, rand() % 2 == 0 ? 1 : -1);
             scored = true;
+            ball.setSpeed(5);
         }
 
         window.clear();

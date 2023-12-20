@@ -4,7 +4,7 @@ class Ball
 {
 private:
     int direction[2];
-    int speed;
+    float speed;
 	int position[2];
 	int bounds[2];
 
@@ -24,8 +24,9 @@ public:
 	void move();
 	void setDirection(int x, int y);
 	int* getDirection();
-	void setSpeed(int speed);
-	int getSpeed();
+	void setSpeed(float speed);
+	float getSpeed();
+	void addSpeed(float speed);
 	void bounceX();
 	void bounceY();
 };
